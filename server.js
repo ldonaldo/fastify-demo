@@ -23,7 +23,25 @@ fastify.register(require('fastify-static'), {
 // Please add a schema to validate the following properties from query string:
 //  - name
 //  - course (required)
-fastify.get('/', (request, reply) => {
+const querySchema = {
+  schema: {
+    querystring: {
+      type: 'object',
+        properties: {
+          name: {
+            type: 'string'
+          },
+          course: {
+            type: 'string'
+          },
+        },
+        required: ['course']
+    }
+
+  }
+}
+
+fastify.get('/', { querySchema }, (request, reply) => {
   const name = request.query.name || 'Anonymous'
   const course = request.query.course
   reply.view('/templates/index.hbs', { name, course })
